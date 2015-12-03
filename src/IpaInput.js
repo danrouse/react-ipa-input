@@ -1,6 +1,8 @@
 import React, { Component, PropTypes } from 'react';
 import classnames from 'classnames';
-import glyphs from './glyph-descriptions.js';
+
+import glyphs from './glyph-descriptions';
+import charsets from './charsets';
 
 class IpaInput extends Component {
     constructor(props) {
@@ -10,7 +12,8 @@ class IpaInput extends Component {
             touch: false,
             value: '',
             suggestions: [],
-            selectedSuggestion: -1
+            selectedSuggestion: -1,
+            mouseOverList: false
         };
     }
  
@@ -35,12 +38,6 @@ class IpaInput extends Component {
                     this.insertSuggestion(this.state.selectedSuggestion);
                     event.preventDefault();
                     break;
-
-                // case 17: // ctrl
-                //     this.setState({
-                //         ctrlKeyDown: true
-                //     });
-                //     break;
             }
 
             // number keys 1-9
@@ -84,14 +81,6 @@ class IpaInput extends Component {
         // }
     }
 
-    onKeyUp(event) {
-        // if(event.keyCode === 17) {
-        //     this.setState({
-        //         ctrlKeyDown: false
-        //     });
-        // }
-    }
-
     onTouchStart(event) {
         /**
          * Activate mobile-friendly 'touch' mode when tapped
@@ -103,23 +92,22 @@ class IpaInput extends Component {
 
     onClick(event) {
         /**
-         * Set to non-touch (keyboard) mode
+         * 
          */
-        this.setState({
-            touch: false
-        });
+        if(event.target === this.refs.list || event.target.parentNode === this.refs.list) {
+            console.log('list click');
+        } else {
+            console.log('nonlist click', this.refs.list, event.target);
+        }
     }
 
     onChange(event) {
         /**
          * Update suggestions list
          */
-        console.log('change', event);
         let suggestions = [];
-        if(event.target.value.length > this.state.value.length) {
-            const inputChar = event.target.value[event.target.selectionStart - 1].toLowerCase();
-            suggestions = this.getSuggestions(inputChar);
-        }
+        const inputChar = event.target.value[event.target.selectionStart - 1].toLowerCase();
+        suggestions = this.getSuggestions(inputChar);
 
         this.setState({
             suggestions: suggestions,
@@ -131,16 +119,34 @@ class IpaInput extends Component {
     onFocus(event) {}
 
     onBlur(event) {
-        // this.setState({
-        //     suggestions: []
-        // });
+        if(!this.state.mouseOverList) {
+            this.setState({
+                suggestions: []
+            });
+        }
+    }
+
+    onListMouseOver(event) {
+        this.setState({
+            mouseOverList: true
+        });
+    }
+
+    onListMouseOut(event) {
+        this.setState({
+            mouseOverList: false
+        });
     }
 
     getSuggestions(query) {
         const suggestions = [];
         for(let glyph of glyphs) {
             if(glyph.resembles.indexOf(query) !== -1) {
-                suggestions.push(glyph);
+                if(!this.props.language ||
+                  (charsets[this.props.language].indexOf(glyph.glyph) !== -1) ||
+                  (glyph.diacritic)) {
+                    suggestions.push(glyph);
+                }
             }
         }
 
@@ -180,20 +186,31 @@ class IpaInput extends Component {
         this.setState({
             value: newValue,
             suggestions: [],
-            selectedSuggestion: -1
+            selectedSuggestion: -1,
+            mouseOverList: false
         }, () => {
+            this.refs.input.focus();
             this.refs.input.setSelectionRange(caretPos, caretPos);
         });
     }
 
+    componentWillReceiveProps(newProps) {
+        if(newProps.language !== this.props.language) {
+            this.setState({
+                suggestions: [],
+                selectedSuggestion: -1
+            });
+        }
+    }
+
     render() {
         return (
-            <div>
+            <div className="IpaInput">
                 <input type="text"
                     ref="input"
+                    className="IpaInputText"
                     value={this.state.value}
                     onKeyDown={this.onKeyDown.bind(this)}
-                    onKeyUp={this.onKeyUp.bind(this)}
                     onTouchStart={this.onTouchStart.bind(this)}
                     onClick={this.onClick.bind(this)}
                     onChange={this.onChange.bind(this)}
@@ -201,13 +218,17 @@ class IpaInput extends Component {
                     onBlur={this.onBlur.bind(this)} />
 
                 <ul className={classnames({
+                        IpaInputSuggestions: true,
                         touch: this.state.touch
-                    })}>
+                    })}
+                    onMouseOver={this.onListMouseOver.bind(this)}
+                    onMouseOut={this.onListMouseOut.bind(this)}>
                     {this.state.suggestions.map((suggestion, index) => {
                         const {glyph, name, diacritic} = suggestion;
                         return (
                             <li key={'IpaSuggestion' + index}
                                 className={classnames({
+                                    IpaInputSuggestion: true,
                                     selected: index === this.state.selectedSuggestion
                                 })}
                                 onClick={this.insertSuggestion.bind(this, index)}>
