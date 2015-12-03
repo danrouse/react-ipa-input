@@ -6,13 +6,21 @@ class App extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            value: '',
             language: ''
         };
     }
 
-    handleChange(event) {
+    onSelectChange(event) {
         this.setState({
             language: event.target.value
+        });
+    }
+
+    onInputChange(value) {
+        console.log('oninputchange', value);
+        this.setState({
+            value: value
         });
     }
 
@@ -30,13 +38,18 @@ class App extends Component {
         return (
             <div>
                 <label htmlFor="langselect">Restrict by language:</label>
-                <select id="langselect" value={this.state.language} onChange={this.handleChange.bind(this)}>
+                <select id="langselect" value={this.state.language} onChange={this.onSelectChange.bind(this)}>
                     {langs.map(lang => {
                         return <option key={lang.code} value={lang.code}>{lang.name}</option>;
                     })}
                 </select>
 
-                <IpaInput language={this.state.language} />
+                <IpaInput
+                    value={this.state.value}
+                    language={this.state.language}
+                    onChange={this.onInputChange.bind(this)} />
+
+                <p>IpaInput value: {this.state.value}</p>
             </div>
         );
     }

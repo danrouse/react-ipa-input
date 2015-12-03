@@ -90,30 +90,25 @@ class IpaInput extends Component {
         });
     }
 
-    onClick(event) {
-        /**
-         * 
-         */
-        if(event.target === this.refs.list || event.target.parentNode === this.refs.list) {
-            console.log('list click');
-        } else {
-            console.log('nonlist click', this.refs.list, event.target);
-        }
-    }
-
     onChange(event) {
         /**
          * Update suggestions list
          */
         let suggestions = [];
-        const inputChar = event.target.value[event.target.selectionStart - 1].toLowerCase();
-        suggestions = this.getSuggestions(inputChar);
+        if(event.target.value.length > 0 && event.target.selectionStart > 0) {
+            const inputChar = event.target.value[event.target.selectionStart - 1].toLowerCase();
+            suggestions = this.getSuggestions(inputChar);  
+        }
 
         this.setState({
             suggestions: suggestions,
             selectedSuggestion: 0,
             value: event.target.value
         });
+
+        if(this.props.onChange !== undefined) {
+            this.props.onChange.call(null, event.target.value);
+        }
     }
 
     onFocus(event) {}
@@ -155,7 +150,6 @@ class IpaInput extends Component {
 
     selectSuggestion(index, loop) {
         let newIndex = Math.max(0, Math.min(this.state.suggestions.length - 1, index));
-
         if(loop && index < 0) {
             newIndex = this.state.suggestions.length - 1;
         } else if(loop && index > this.state.suggestions.length - 1) {
@@ -192,15 +186,30 @@ class IpaInput extends Component {
             this.refs.input.focus();
             this.refs.input.setSelectionRange(caretPos, caretPos);
         });
+
+        if(this.props.onChange !== undefined) {
+            this.props.onChange.call(null, newValue);
+        }
     }
 
     componentWillReceiveProps(newProps) {
-        if(newProps.language !== this.props.language) {
-            this.setState({
-                suggestions: [],
-                selectedSuggestion: -1
-            });
+        const newState = {};
+
+        if(newProps.value !== this.state.value) {
+            newState.value = newProps.value;
+
+            if(newProps.value.length < this.state.value.length) {
+                newState.suggestions = [];
+                newState.selectedSuggestion = -1;
+            }
         }
+
+        if(newProps.language !== this.props.language) {
+            newState.suggestions = [];
+            newState.selectedSuggestion = -1;
+        }
+
+        this.setState(newState);
     }
 
     render() {
@@ -212,7 +221,6 @@ class IpaInput extends Component {
                     value={this.state.value}
                     onKeyDown={this.onKeyDown.bind(this)}
                     onTouchStart={this.onTouchStart.bind(this)}
-                    onClick={this.onClick.bind(this)}
                     onChange={this.onChange.bind(this)}
                     onFocus={this.onFocus.bind(this)}
                     onBlur={this.onBlur.bind(this)} />
@@ -245,7 +253,9 @@ class IpaInput extends Component {
 }
 
 IpaInput.propTypes = {
-    language: PropTypes.string
+    language: PropTypes.string,
+    onChange: PropTypes.func,
+    value: PropTypes.string 
 };
 
 export default IpaInput;
