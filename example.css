@@ -1,0 +1,94 @@
+/* 
+// Examples Stylesheet
+// -------------------
+*/
+body {
+  font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  color: #333;
+  margin: 0;
+  padding: 0;
+}
+a {
+  color: #08c;
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+.container {
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 720px;
+  padding: 1em;
+}
+.footer {
+  margin-top: 50px;
+  border-top: 1px solid #eee;
+  padding: 20px 0;
+  font-size: 12px;
+  color: #999;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: #222;
+  font-weight: 100;
+  margin: 0.5em 0;
+}
+label {
+  color: #999;
+  display: inline-block;
+  font-size: 0.85em;
+  font-weight: bold;
+  margin: 1em 0;
+  text-transform: uppercase;
+}
+.hints {
+  padding: 1em 0 0;
+}
+.IpaInput__input {
+  box-sizing: border-box;
+  border: 1px solid #666;
+  padding: 0.25em;
+}
+.IpaInput__list {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  background-color: #eee;
+  border: 1px solid #666;
+  border-right: 0;
+}
+.IpaInput__item {
+  padding: 0.5em 0.75em;
+  border-right: 1px solid black;
+}
+.IpaInput__item.selected {
+  background-color: #fff;
+}
+.IpaInput__item:hover {
+  background-color: #fff;
+  cursor: pointer;
+}
+.IpaInput__item__number {
+  font-size: 70%;
+  color: #aaa;
+  float: left;
+  width: 40%;
+}
+.IpaInput__item__glyph {
+  font-size: 120%;
+  float: left;
+  width: 60%;
+}
+.IpaInput__item__name {
+  display: block;
+  clear: left;
+  font-size: 60%;
+  width: 100%;
+  text-align: center;
+}
