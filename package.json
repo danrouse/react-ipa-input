@@ -13,7 +13,8 @@
     "url": "https://github.com/kremonte/react-ipa-input/issues"
   },
   "dependencies": {
-    "classnames": "^2.1.2"
+    "classnames": "^2.1.2",
+    "merge": "^1.2.0"
   },
   "devDependencies": {
     "babel-eslint": "^4.1.3",

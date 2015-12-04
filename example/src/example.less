@@ -55,35 +55,25 @@ label {
 }
 
 .IpaInput {
-    position: relative;
 }
-    .IpaInputText {
-        position: relative;
+    .IpaInput__input {
         box-sizing: border-box;
-        width: 100%;
         border: 1px solid #666;
         padding: 0.25em;
-        z-index: 2;
     }
-    .IpaInputSuggestions {
+    .IpaInput__list {
         box-sizing: border-box;
-        position: absolute;
-        left: 0;
         margin: 0;
         padding: 0;
-        list-style: none;
         background-color: #eee;
         border: 1px solid #666;
         border-right: 0;
-        z-index: 1;
     }
-        .IpaInputSuggestion {
-            display: inline-block;
+        .IpaInput__item {
             padding: 0.5em 0.75em;
             border-right: 1px solid black;
 
             &.selected {
-                outline: -webkit-focus-ring-color auto 5px;
                 background-color: #fff;
             }
 
@@ -91,26 +81,25 @@ label {
                 background-color: #fff;
                 cursor: pointer;
             }
-
-            .suggestion-number {
+        }
+            .IpaInput__item__number {
                 font-size: 70%;
                 color: #aaa;
                 float: left;
                 width: 40%;
             }
-            .suggestion-glyph {
+            .IpaInput__item__glyph {
                 font-size: 120%;
                 float: left;
                 width: 60%;
             }
-            .suggestion-name {
+            .IpaInput__item__name {
                 display: block;
                 clear: left;
                 font-size: 60%;
                 width: 100%;
                 text-align: center;
             }
-        }
 
     .IpaInputText:focus ~ .IpaInputSuggestions {
         

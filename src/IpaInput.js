@@ -1,7 +1,8 @@
 import React, { Component, PropTypes } from 'react';
 import classnames from 'classnames';
+import merge from 'merge';
 
-import glyphs from './glyph-descriptions';
+import glyphs from './glyphs';
 import charsets from './charsets';
 
 class IpaInput extends Component {
@@ -213,11 +214,36 @@ class IpaInput extends Component {
     }
 
     render() {
+        const styles = {
+            container: {
+                position: 'relative'
+            },
+            input: {
+                position: 'relative',
+                width: '100%',
+                zIndex: 2
+            },
+            list: {
+                position: 'absolute',
+                left: 0,
+                top: '100%',
+                listStyle: 'none',
+                zIndex: 1
+            },
+            item: {
+                display: 'inline-block',
+            },
+            itemSelected: {
+                outline: '-webkit-focus-ring-color auto 5px',
+            }
+        };
+
         return (
-            <div className="IpaInput">
+            <div className="IpaInput" style={styles.container}>
                 <input type="text"
                     ref="input"
-                    className="IpaInputText"
+                    className="IpaInput__input"
+                    style={styles.input}
                     value={this.state.value}
                     onKeyDown={this.onKeyDown.bind(this)}
                     onTouchStart={this.onTouchStart.bind(this)}
@@ -226,23 +252,27 @@ class IpaInput extends Component {
                     onBlur={this.onBlur.bind(this)} />
 
                 <ul className={classnames({
-                        IpaInputSuggestions: true,
+                        IpaInput__list: true,
                         touch: this.state.touch
                     })}
+                    style={styles.list}
                     onMouseOver={this.onListMouseOver.bind(this)}
                     onMouseOut={this.onListMouseOut.bind(this)}>
                     {this.state.suggestions.map((suggestion, index) => {
                         const {glyph, name, diacritic} = suggestion;
+
                         return (
                             <li key={'IpaSuggestion' + index}
                                 className={classnames({
-                                    IpaInputSuggestion: true,
-                                    selected: index === this.state.selectedSuggestion
-                                })}
-                                onClick={this.insertSuggestion.bind(this, index)}>
-                                <span className="suggestion-number">{index + 1}</span>
-                                <span className="suggestion-glyph">{glyph}</span>
-                                <span className="suggestion-name">{name}</span>
+                                    IpaInput__item: true,
+                                    selected: index === this.state.selectedSuggestion })}
+                                style={merge.recursive(true, styles.item, index === this.state.selectedSuggestion ? styles.itemSelected : {})}
+                                onClick={this.insertSuggestion.bind(this, index)}
+                                onMouseOver={this.selectSuggestion.bind(this, index)}>
+                                
+                                {this.props.showNumber && <span className="IpaInput__item__number">{index + 1}</span>}
+                                <span className="IpaInput__item__glyph">{glyph}</span>
+                                {this.props.showName && <span className="IpaInput__item__name">{name}</span>}                                
                             </li>
                         );
                     })}
@@ -255,7 +285,16 @@ class IpaInput extends Component {
 IpaInput.propTypes = {
     language: PropTypes.string,
     onChange: PropTypes.func,
+    showName: PropTypes.bool,
+    showNumber: PropTypes.bool,
     value: PropTypes.string 
+};
+
+IpaInput.defaultProps = {
+    language: '',
+    showName: true,
+    showNumber: true,
+    value: ''
 };
 
 export default IpaInput;
