@@ -4,13 +4,13 @@
   "description": "React component for inputting phonetic symbols from the International Phonetic Alphabet",
   "main": "lib/IpaInput.js",
   "author": "Dan Rouse",
-  "homepage": "https://github.com/kremonte/react-ipa-input",
+  "homepage": "https://github.com/danrouse/react-ipa-input",
   "repository": {
     "type": "git",
-    "url": "https://github.com/kremonte/react-ipa-input.git"
+    "url": "https://github.com/danrouse/react-ipa-input.git"
   },
   "bugs": {
-    "url": "https://github.com/kremonte/react-ipa-input/issues"
+    "url": "https://github.com/danrouse/react-ipa-input/issues"
   },
   "dependencies": {
     "classnames": "^2.1.2",
