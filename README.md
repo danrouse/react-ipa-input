@@ -7,7 +7,7 @@ React component for inputting phonetic symbols from the International Phonetic A
 
 ## Demo & Examples
 
-Live demo: [kremonte.github.io/react-ipa-input](http://kremonte.github.io/react-ipa-input/)
+Live demo: [danrouse.github.io/react-ipa-input](http://danrouse.github.io/react-ipa-input/)
 
 To build the examples locally, run:
 

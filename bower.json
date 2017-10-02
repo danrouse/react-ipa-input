@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "description": "IPA Input",
   "main": "dist/react-ipa-input.min.js",
-  "homepage": "https://github.com/kremonte/react-ipa-input",
+  "homepage": "https://github.com/danrouse/react-ipa-input",
   "authors": [
     "Dan Rouse"
   ],
